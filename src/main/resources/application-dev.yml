@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/financial_data_analysis_api
+    username: root
+    password: 11904231@$
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  mail:
+    #    host: localhost
+    #    port: 1025
+    #    username: amir
+    #    password: amir
+    host: smtp.gmail.com
+    port: 587
+    username: contact.fee.edu.eg@gmail.com
+    password: aqtk zucu vfoo oalk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enalbe: true
+            required: true
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimout: 5000
+        timeout: 3000
+        writetimeout: 5000
+application:
+  security:
+    jwt:
+      secret-key: 97b98665ea4d4672f793b70fed1c71fc23dff48e92fca2137254f9acb259c280
+      expiration: 8640000
+  mailing:
+    activation-url: http://localhost:8089/api/v1/auth/activate-account?token=
