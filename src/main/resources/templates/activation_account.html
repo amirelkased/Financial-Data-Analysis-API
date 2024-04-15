@@ -18,6 +18,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+            font-size: 18px;
         }
 
         h1 {
@@ -54,9 +55,9 @@
     <h1>Account Activation</h1>
     <h4>Welcome, <span th:text="${username}">Username</span>!</h4>
     <p>To activate your account, please use the following activation code:</p>
-    <p class="activation-code" th:text="${activation_code}"></p>
-    <p>You can also activate your account directly by clicking the button below:</p>
-    <a th:href="@{${activationUrl +  activation_code}}" class="activation-btn">Activate Account</a>
+    <p class="activation-code" th:text="${activation_code}">123456</p>
+<!--    <p>You can also activate your account directly by clicking the button below:</p>-->
+<!--    <a th:href="@{${activationUrl +  activation_code}}" class="activation-btn">Activate Account</a>-->
 </div>
 </body>
 </html>
