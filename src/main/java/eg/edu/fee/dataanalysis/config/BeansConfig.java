@@ -1,8 +1,11 @@
 package eg.edu.fee.dataanalysis.config;
 
 
+import eg.edu.fee.dataanalysis.common.Stock;
+import eg.edu.fee.dataanalysis.common.StockRepository;
 import eg.edu.fee.dataanalysis.role.Role;
 import eg.edu.fee.dataanalysis.role.RoleRepository;
+import eg.edu.fee.dataanalysis.stockvoting.StockVotes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +45,8 @@ public class BeansConfig {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(RoleRepository roleRepository) {
+    public CommandLineRunner commandLineRunner(RoleRepository roleRepository,
+                                               StockRepository stockRepository) {
         return e -> {
             Role role = Role.builder()
                     .name("USER")
@@ -50,6 +54,18 @@ public class BeansConfig {
                     .build();
 
             roleRepository.save(role);
+
+            Stock stock = Stock.builder()
+                    .name("Apple")
+                    .build();
+            StockVotes stockVotes = StockVotes.builder()
+                    .opening(10L)
+                    .closing(102L)
+                    .noOfVotes(2443L)
+                    .stock(stock)
+                    .build();
+            stock.setStockVotes(stockVotes);
+            stockRepository.save(stock);
         };
     }
 }
