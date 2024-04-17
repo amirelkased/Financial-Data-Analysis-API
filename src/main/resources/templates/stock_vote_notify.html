@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Stock Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="'Hello, ' + ${username} + '!'">Hello, User!</h1>
+        <p>Here is the stock information you requested:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Stock Name</th>
+                    <th>Opening</th>
+                    <th>Closing</th>
+                    <th>Number of Votes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="stock : ${stocks}">
+                    <td th:text="${stock.name}">Stock Name</td>
+                    <td th:text="${stock.open}">Opening</td>
+                    <td th:text="${stock.close}">Closing</td>
+                    <td th:text="${stock.votes}">Number of Votes</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -5,7 +5,7 @@ import eg.edu.fee.dataanalysis.common.Stock;
 import eg.edu.fee.dataanalysis.common.StockRepository;
 import eg.edu.fee.dataanalysis.role.Role;
 import eg.edu.fee.dataanalysis.role.RoleRepository;
-import eg.edu.fee.dataanalysis.stockvoting.StockVotes;
+import eg.edu.fee.dataanalysis.stockvoting.StockVote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -58,13 +58,13 @@ public class BeansConfig {
             Stock stock = Stock.builder()
                     .name("Apple")
                     .build();
-            StockVotes stockVotes = StockVotes.builder()
+            StockVote stockVote = StockVote.builder()
                     .opening(10L)
                     .closing(102L)
                     .noOfVotes(2443L)
                     .stock(stock)
                     .build();
-            stock.setStockVotes(stockVotes);
+            stock.setStockVote(stockVote);
             stockRepository.save(stock);
         };
     }

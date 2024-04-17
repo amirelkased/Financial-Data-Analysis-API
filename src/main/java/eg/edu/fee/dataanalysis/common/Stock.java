@@ -1,7 +1,7 @@
 package eg.edu.fee.dataanalysis.common;
 
 import eg.edu.fee.dataanalysis.stockpredict.StockPrediction;
-import eg.edu.fee.dataanalysis.stockvoting.StockVotes;
+import eg.edu.fee.dataanalysis.stockvoting.StockVote;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class Stock {
     private Long id;
     private String name;
     @OneToOne(mappedBy = "stock", cascade = CascadeType.ALL)
-    private StockVotes stockVotes;
+    private StockVote stockVote;
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<StockPrediction> stockPredictions;
 }

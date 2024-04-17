@@ -2,6 +2,7 @@ package eg.edu.fee.dataanalysis.user;
 
 import eg.edu.fee.dataanalysis.role.Role;
 import eg.edu.fee.dataanalysis.security.JwtToken;
+import eg.edu.fee.dataanalysis.stockvoting.UserVote;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,6 +49,8 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
     @OneToMany(mappedBy = "user")
     private List<JwtToken> jwtTokens;
+    @OneToMany(mappedBy = "user")
+    private List<UserVote> userVotes;
 
 
     @Override
