@@ -47,3 +47,7 @@ logging:
   level:
     org:
       springframework: trace
+model:
+  credential:
+    username: amirelkased
+    password: 90ea58ff9e96db59354200d47a74447240bee1ee252353b8b9c2213b3fca5d9ds
