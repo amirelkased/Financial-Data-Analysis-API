@@ -31,7 +31,7 @@ public class UserVoteEmailService {
     private final UserRepository userRepository;
     private final SpringTemplateEngine templateEngine;
 
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "0 10 17 * * *")
     @Async
     public void notifyUserWithStockClosing() throws MessagingException {
         Map<User, List<StockVoteResponseModel>> userWithStocks = getUserWithStockVotes();

@@ -1,26 +1,34 @@
 package eg.edu.fee.dataanalysis.stockpredict;
 
-import lombok.RequiredArgsConstructor;
+import eg.edu.fee.dataanalysis.common.Stock;
+import eg.edu.fee.dataanalysis.common.StockRepository;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Base64Util;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class StockPredictionService {
     private final RestClient restClient;
-    private final ModelCredential modelCredential;
+    private final CredentialMLModel modelCredential;
     private final StockPredictionRepository stockPredictionRepository;
+    private final StockRepository stockRepository;
 
-    {
+    public StockPredictionService(CredentialMLModel modelCredential, StockPredictionRepository stockPredictionRepository, StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
         this.restClient = RestClient.create();
+        this.modelCredential = modelCredential;
+        this.stockPredictionRepository = stockPredictionRepository;
     }
 
+    @Transactional
     public List<StockPredictionResponseModel> getStockPrediction(StockPredictionBody stock) {
 
         List<StockPredictionResponseModel> responseModelList = getStockIfExists(stock.getStockId());
@@ -29,29 +37,57 @@ public class StockPredictionService {
             return responseModelList;
         }
 
-        responseModelList =
-                Collections.singletonList(
-                        restClient.post()
-                                .uri("http://127.0.0.1:5000/predict")
-                                .header("Authorization",
-                                        Base64Util.encode(
-                                                modelCredential.getUsername().concat(modelCredential.getPassword())
-                                        )
+        responseModelList = restClient.post()
+                .uri("http://127.0.0.1:5000/predict")
+                .header("Authorization",
+                        "Basic ".concat(Base64Util.encode(modelCredential
+                                        .getUsername()
+                                        .concat(":")
+                                        .concat(modelCredential.getPassword())
                                 )
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(
-                                        StockPredictionBody.builder()
-                                                .stockId(stock.getStockId())
-                                                .noOfDay(stock.getNoOfDay())
-                                                .build()
-                                ).retrieve()
-                                .body(StockPredictionResponseModel.class)
-                );
+                        )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        StockPredictionBody.builder()
+                                .stockId(stock.getStockId())
+                                .noOfDay(stock.getNoOfDay())
+                                .build()
+                ).retrieve()
+                .toEntity(new ParameterizedTypeReference<List<StockPredictionResponseModel>>() {
+                }).getBody();
 
+        assert responseModelList != null;
+        saveStockPrediction(responseModelList, stock.getStockId());
         return responseModelList;
     }
 
     private List<StockPredictionResponseModel> getStockIfExists(Long stockId) {
         return stockPredictionRepository.findStockPrediction(stockId);
+    }
+
+    @Transactional
+    protected void saveStockPrediction(List<StockPredictionResponseModel> responseModels, Long stockId) {
+
+        Stock stock = stockRepository.findById(stockId).orElseThrow(
+                () -> new RuntimeException("Stock %d not found".formatted(stockId))
+        );
+        List<StockPrediction> stockPredictionList = new ArrayList<>();
+        responseModels.forEach(e -> {
+            StockPrediction stockPrediction = StockPrediction.builder()
+                    .date(e.getDate())
+                    .openPrediction(e.getOpeningPrediction())
+                    .closePrediction(e.getClosingPrediction())
+                    .stock(stock)
+                    .build();
+
+            stockPredictionList.add(stockPrediction);
+        });
+        persistStockPrediction(stockPredictionList);
+    }
+
+    @Transactional
+    protected void persistStockPrediction(List<StockPrediction> stockPredictionList) {
+        stockPredictionRepository.saveAll(stockPredictionList);
     }
 }

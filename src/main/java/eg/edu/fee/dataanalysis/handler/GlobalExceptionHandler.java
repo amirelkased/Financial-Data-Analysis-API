@@ -79,23 +79,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({RestClientException.class, Exception.class})
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
-        exception.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorDescription("Internal error, contact the admin")
-                                .error(exception.getMessage())
-                                .build()
-                );
-    }
-
-    @ExceptionHandler(RestClientException.class)
-    public ResponseEntity<ExceptionResponse> handleException(RestClientException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
                                 .error(exception.getMessage())
                                 .build()
                 );

@@ -1,13 +1,15 @@
 package eg.edu.fee.dataanalysis.stockpredict;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockPredictionBody {
-    private long stockId;
-    private int noOfDay;
+    private Long stockId;
+    private Integer noOfDay;
 }

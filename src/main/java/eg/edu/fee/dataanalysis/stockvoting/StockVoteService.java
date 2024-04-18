@@ -25,7 +25,7 @@ public class StockVoteService {
     public void vote(Long stockId, Long voteValue) {
 
         if (LocalDateTime.now().isAfter(LocalDateTime.of(LocalDate.now(),
-                LocalTime.of(16, 0, 0)))) {
+                LocalTime.of(17, 10, 0)))) {
             throw new RuntimeException("Not allow for now to vote, see you tomorrow");
         }
 

@@ -6,16 +6,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 @RequiredArgsConstructor
-public class UserVoteService {
+public class UserVoteDao {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    @Scheduled(cron = "0 5 16 * * *")
+    @Scheduled(cron = "0 15 17 * * *")
     @Transactional
     @Async
     public void truncateUserVote() {

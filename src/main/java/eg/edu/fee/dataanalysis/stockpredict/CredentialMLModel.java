@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "model.credential")
 @RequiredArgsConstructor
 @Data
-public class ModelCredential {
+public class CredentialMLModel {
     private String username;
     private String password;
 }
