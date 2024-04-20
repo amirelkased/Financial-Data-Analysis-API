@@ -55,7 +55,7 @@ public class UserVoteEmailService {
             helper.setTo(user.getKey().getEmail());
             helper.setSubject("Stock Vote Closing");
 
-            String template = templateEngine.process("stock_vote_notify", context);
+            String template = templateEngine.process(EmailTemplateName.STOCK_VOTING_NOTIFY.getName(), context);
             helper.setText(template, true);
             javaMailSender.send(mimeMessage);
         }
