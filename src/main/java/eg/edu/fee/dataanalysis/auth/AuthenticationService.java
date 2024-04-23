@@ -40,6 +40,8 @@ public class AuthenticationService {
     private final JwtTokenRepository jwtTokenRepository;
     @Value(value = "${application.mailing.activation-url}")
     private String activationUrl;
+    @Value(value = "${application.security.token.length}")
+    private int tokenLength;
 
     public void register(RegistrationRequest registrationRequest) throws MessagingException {
 
@@ -75,7 +77,7 @@ public class AuthenticationService {
     }
 
     private String generateAndSaveActivationToken(User user) {
-        String generatedToken = generateActivationToken(6);
+        String generatedToken = generateActivationToken(tokenLength);
         Token token = Token.builder()
                 .token(generatedToken)
                 .createdAt(LocalDateTime.now())

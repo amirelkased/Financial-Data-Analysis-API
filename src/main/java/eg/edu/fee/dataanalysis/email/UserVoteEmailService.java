@@ -52,6 +52,7 @@ public class UserVoteEmailService {
             Context context = new Context();
             context.setVariables(properties);
 
+//        helper.setFrom("amirelkased8558@gmail.com");
             helper.setTo(user.getKey().getEmail());
             helper.setSubject("Stock Vote Closing");
 

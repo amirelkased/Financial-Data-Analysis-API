@@ -42,6 +42,8 @@ application:
     jwt:
       secret-key: 97b98665ea4d4672f793b70fed1c71fc23dff48e92fca2137254f9acb259c280
       expiration: 8640000
+    token:
+      length: 6
   mailing:
     activation-url: http://localhost:8089/api/v1/auth/activate-account?token=
 logging:
