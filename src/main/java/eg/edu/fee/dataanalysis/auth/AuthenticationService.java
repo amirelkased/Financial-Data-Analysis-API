@@ -7,14 +7,13 @@ import eg.edu.fee.dataanalysis.role.RoleRepository;
 import eg.edu.fee.dataanalysis.security.JwtService;
 import eg.edu.fee.dataanalysis.security.JwtToken;
 import eg.edu.fee.dataanalysis.security.JwtTokenRepository;
+import eg.edu.fee.dataanalysis.security.TokenService;
 import eg.edu.fee.dataanalysis.user.Token;
 import eg.edu.fee.dataanalysis.user.TokenRepository;
 import eg.edu.fee.dataanalysis.user.User;
 import eg.edu.fee.dataanalysis.user.UserRepository;
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,10 +36,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final JwtTokenRepository jwtTokenRepository;
-    @Value(value = "${application.mailing.activation-url}")
-    private String activationUrl;
-    @Value(value = "${application.security.token.length}")
-    private int tokenLength;
+    private final TokenService tokenService;
 
     public void register(RegistrationRequest registrationRequest) throws MessagingException {
 
@@ -64,49 +59,18 @@ public class AuthenticationService {
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
-        String newToken = generateAndSaveActivationToken(user);
+        String newToken = tokenService.generateActivationToken();
+        tokenService.saveActivationToken(newToken, user);
         // send mail
         emailService.sendEmail(
                 user.getEmail(),
                 user.fullName(),
                 EmailTemplateName.ACTIVATION_ACCOUNT,
-                activationUrl,
                 newToken,
                 "Activation Account"
         );
     }
 
-    private String generateAndSaveActivationToken(User user) {
-        String generatedToken = generateActivationToken(tokenLength);
-        Token token = Token.builder()
-                .token(generatedToken)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(10))
-                .user(user)
-                .build();
-
-        tokenRepository.save(token);
-        return generatedToken;
-    }
-
-    private String generateActivationToken(int length) {
-        final String characters = "0123456789";
-        StringBuilder codeBuilder = new StringBuilder();
-
-        SecureRandom secureRandom = new SecureRandom();
-        for (int i = 0; i < length; i++) {
-            codeBuilder.append(
-                    characters.charAt(
-                            secureRandom.nextInt(characters.length()
-                            )
-                    )
-            );
-        }
-
-        return codeBuilder.toString();
-    }
-
-    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         Authentication auth = authenticationManager.authenticate(
@@ -137,7 +101,6 @@ public class AuthenticationService {
         jwtTokenRepository.save(jwtToken);
     }
 
-    @Transactional
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Token is not exists"));
@@ -156,7 +119,6 @@ public class AuthenticationService {
         tokenRepository.save(savedToken);
     }
 
-    @Transactional
     public void revokeJwtToken(String token) {
         token = token.substring(7);
         JwtToken savedToken = jwtTokenRepository.findByToken(token).orElseThrow(
@@ -167,7 +129,6 @@ public class AuthenticationService {
         jwtTokenRepository.save(savedToken);
     }
 
-    @Transactional
     public void revokeAllUserToken(Long userId) {
         List<JwtToken> allUserToken = jwtTokenRepository.findAllValidTokensByUser(userId);
 
