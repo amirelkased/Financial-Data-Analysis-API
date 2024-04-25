@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stock/predict")
 @RequiredArgsConstructor
 public class StockPredictRestController {
     private final StockPredictionService stockPredictionService;
 
-    @PostMapping("/predict")
+    @PostMapping("")
     public ResponseEntity<List<StockPredictionResponseModel>> getStockPredicttion(
             @RequestBody StockPredictionBody stockPredictionBody) {
         List<StockPredictionResponseModel> result = stockPredictionService.getStockPrediction(stockPredictionBody);
