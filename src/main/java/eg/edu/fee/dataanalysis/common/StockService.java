@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -12,11 +13,12 @@ public class StockService {
     private final StockRepository stockRepository;
 
     @Transactional
-    public List<StockDto> saveStock(List<StockDto> stock) {
-
-        List<Stock> mappedStock = stock.stream().map(e -> Stock.builder()
-                .name(e.getName())
-                .build()).toList();
+    public List<StockDto> saveStock(String... stock) {
+        List<Stock> mappedStock = Arrays.stream(stock)
+                .map(e -> Stock.builder()
+                        .name(e)
+                        .build()
+                ).toList();
 
         List<Stock> savedStock = stockRepository.saveAll(mappedStock);
 

@@ -14,6 +14,7 @@ import eg.edu.fee.dataanalysis.user.User;
 import eg.edu.fee.dataanalysis.user.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -81,6 +83,9 @@ public class AuthenticationService {
         User user = ((User) auth.getPrincipal());
         claims.put("fullName", user.fullName());
         String generatedJwtToken = jwtService.generateToken(claims, user);
+
+
+        log.warn("token : {}", generatedJwtToken.length());
 
         // Save user along jwt token
         revokeAllUserToken(user.getId());

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/stock/vote")
+@RequestMapping("/stocks/votes")
 @RequiredArgsConstructor
 public class StockVoteRestController {
     private final StockVoteService stockVoteService;

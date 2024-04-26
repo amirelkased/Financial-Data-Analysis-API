@@ -18,6 +18,7 @@ public class Stock {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(unique = true, nullable = false)
     private String name;
     @OneToOne(mappedBy = "stock", cascade = CascadeType.ALL)
     private StockVote stockVote;

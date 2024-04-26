@@ -6,6 +6,8 @@ import eg.edu.fee.dataanalysis.common.StockRepository;
 import eg.edu.fee.dataanalysis.role.Role;
 import eg.edu.fee.dataanalysis.role.RoleRepository;
 import eg.edu.fee.dataanalysis.stockvoting.StockVote;
+import eg.edu.fee.dataanalysis.user.User;
+import eg.edu.fee.dataanalysis.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -46,14 +50,22 @@ public class BeansConfig {
 
     @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository,
-                                               StockRepository stockRepository) {
+                                               StockRepository stockRepository,
+                                               UserRepository userRepository) {
         return e -> {
-            Role role = Role.builder()
+            List<Role> roles = new ArrayList<>();
+            Role userRole = Role.builder()
                     .name("USER")
                     .createdDate(LocalDateTime.now())
                     .build();
+            Role adminRole = Role.builder()
+                    .name("ADMIN")
+                    .createdDate(LocalDateTime.now())
+                    .build();
+            roles.add(userRole);
+            roles.add(adminRole);
 
-            roleRepository.save(role);
+            roleRepository.saveAll(roles);
 
             Stock stock = Stock.builder()
                     .name("Apple")
@@ -66,6 +78,17 @@ public class BeansConfig {
                     .build();
             stock.setStockVote(stockVote);
             stockRepository.save(stock);
+
+            User user = eg.edu.fee.dataanalysis.user.User.builder()
+                    .firstname("Amir")
+                    .lastname("Elkased")
+                    .email("amirelkased.util@gmail.com")
+                    .password(passwordEncoder().encode("abcd1234"))
+                    .enabled(true)
+                    .roles(List.of(userRole, adminRole))
+                    .build();
+
+            userRepository.save(user);
         };
     }
 }

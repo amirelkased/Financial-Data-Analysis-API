@@ -1,7 +1,6 @@
 package eg.edu.fee.dataanalysis.common;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +9,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/stock")
+@RequestMapping("/admin/stocks")
 public class StockRestController {
     private final StockService stockService;
 
     @PostMapping("")
-    public ResponseEntity<List<StockDto>> saveStocks(@RequestBody List<StockDto> stockDtoList) {
-        List<StockDto> saveStocks = stockService.saveStock(stockDtoList);
+    public ResponseEntity<List<StockDto>> saveStocks(@RequestBody String... stocks) {
+        List<StockDto> saveStocks = stockService.saveStock(stocks);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saveStocks);
     }

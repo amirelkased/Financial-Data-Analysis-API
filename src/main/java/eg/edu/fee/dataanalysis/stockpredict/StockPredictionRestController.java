@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stock/predict")
+@RequestMapping("/stocks/predictions")
 @RequiredArgsConstructor
-public class StockPredictRestController {
+public class StockPredictionRestController {
     private final StockPredictionService stockPredictionService;
 
     @PostMapping("")
