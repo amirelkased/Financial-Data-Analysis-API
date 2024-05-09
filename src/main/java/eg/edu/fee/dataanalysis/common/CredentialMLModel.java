@@ -1,4 +1,4 @@
-package eg.edu.fee.dataanalysis.stockpredict;
+package eg.edu.fee.dataanalysis.common;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

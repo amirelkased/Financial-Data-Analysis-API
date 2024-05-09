@@ -5,6 +5,8 @@ import eg.edu.fee.dataanalysis.common.Stock;
 import eg.edu.fee.dataanalysis.common.StockRepository;
 import eg.edu.fee.dataanalysis.role.Role;
 import eg.edu.fee.dataanalysis.role.RoleRepository;
+import eg.edu.fee.dataanalysis.stockpredict.StockPredictionResponseModel;
+import eg.edu.fee.dataanalysis.stockpredict.StockPredictionService;
 import eg.edu.fee.dataanalysis.stockvoting.StockVote;
 import eg.edu.fee.dataanalysis.user.User;
 import eg.edu.fee.dataanalysis.user.UserRepository;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,8 @@ public class BeansConfig {
     @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository,
                                                StockRepository stockRepository,
-                                               UserRepository userRepository) {
+                                               UserRepository userRepository,
+                                               StockPredictionService stockPredictionService) {
         return e -> {
             List<Role> roles = new ArrayList<>();
             Role userRole = Role.builder()
@@ -89,6 +93,17 @@ public class BeansConfig {
                     .build();
 
             userRepository.save(user);
+
+            List<StockPredictionResponseModel> dummyData = new ArrayList<>();
+            for (int i = 1; i <= 15; i++) {
+                dummyData.add(StockPredictionResponseModel.builder()
+                        .date(LocalDate.now().plusDays(i))
+                        .openingPrediction(300L * i)
+                        .closingPrediction(405L * i)
+                        .build());
+            }
+
+            stockPredictionService.presistDummyData(dummyData);
         };
     }
 }

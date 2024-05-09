@@ -1,5 +1,6 @@
 package eg.edu.fee.dataanalysis.stockpredict;
 
+import eg.edu.fee.dataanalysis.common.CredentialMLModel;
 import eg.edu.fee.dataanalysis.common.Stock;
 import eg.edu.fee.dataanalysis.common.StockRepository;
 import jakarta.transaction.Transactional;
@@ -89,5 +90,9 @@ public class StockPredictionService {
     @Transactional
     protected void persistStockPrediction(List<StockPrediction> stockPredictionList) {
         stockPredictionRepository.saveAll(stockPredictionList);
+    }
+
+    public void presistDummyData(List<StockPredictionResponseModel> data) {
+        saveStockPrediction(data, 1L);
     }
 }
