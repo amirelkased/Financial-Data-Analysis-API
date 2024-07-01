@@ -1,18 +1,25 @@
 package eg.edu.fee.dataanalysis.marketindicator;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
 public class ResponseData {
-    private List<RankItem> profits;
-    private List<RankItem> losses;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
+    private Long id;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<RankItem> profits;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<RankItem> losses;
 }

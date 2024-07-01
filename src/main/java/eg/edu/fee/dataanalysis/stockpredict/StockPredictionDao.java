@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-
 public class StockPredictionDao {
     @PersistenceContext
     private final EntityManager entityManager;
